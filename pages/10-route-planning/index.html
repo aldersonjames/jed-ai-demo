@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Route Planning - Google Maps Copilot Narrator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #000;
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .app-container {
+            max-width: 375px;
+            margin: 0 auto;
+            background: #1a1a1a;
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        .status-bar {
+            background: #000;
+            padding: 8px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+            color: white;
+        }
+
+        .planning-header {
+            padding: 20px;
+            background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
+            text-align: center;
+        }
+
+        .header-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .header-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .planning-section {
+            padding: 20px;
+            background: #1a1a1a;
+            border-bottom: 1px solid #3a3a3a;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #ff6b35;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-label {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 12px;
+            color: white;
+            font-size: 14px;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #ff6b35;
+            background: rgba(255,107,53,0.1);
+        }
+
+        .input-field::placeholder {
+            color: rgba(255,255,255,0.5);
+        }
+
+        .location-inputs {
+            display: grid;
+            gap: 15px;
+        }
+
+        .location-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .location-icon {
+            width: 20px;
+            height: 20px;
+            background: #ff6b35;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: white;
+        }
+
+        .add-stop-btn {
+            padding: 8px 12px;
+            background: rgba(255,107,53,0.2);
+            border: 1px solid rgba(255,107,53,0.3);
+            border-radius: 8px;
+            color: #ff6b35;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .add-stop-btn:hover {
+            background: rgba(255,107,53,0.3);
+        }
+
+        .preferences-section {
+            background: #2a2a2a;
+            border-radius: 12px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .preference-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .preference-item {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 11px;
+        }
+
+        .preference-item.active {
+            background: rgba(255,107,53,0.2);
+            border-color: #ff6b35;
+            color: #ff6b35;
+        }
+
+        .preference-icon {
+            font-size: 16px;
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        .slider-container {
+            margin: 15px 0;
+        }
+
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+
+        .slider {
+            width: 100%;
+            height: 4px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 2px;
+            cursor: pointer;
+        }
+
+        .slider-fill {
+            height: 100%;
+            background: #ff6b35;
+            border-radius: 2px;
+            width: 50%;
+        }
+
+        .route-preview {
+            background: #2a2a2a;
+            border-radius: 12px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .preview-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #ff6b35;
+        }
+
+        .route-summary {
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+
+        .summary-label {
+            opacity: 0.7;
+        }
+
+        .summary-value {
+            font-weight: 600;
+        }
+
+        .poi-preview {
+            font-size: 11px;
+            opacity: 0.8;
+            line-height: 1.4;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #ff6b35;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .bottom-nav {
+            padding: 15px 20px;
+            background: #2a2a2a;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .nav-item {
+            text-align: center;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .nav-icon {
+            font-size: 20px;
+            margin-bottom: 2px;
+            display: block;
+        }
+
+        .nav-label {
+            font-size: 10px;
+            opacity: 0.7;
+        }
+
+        .nav-item.active .nav-icon {
+            color: #ff6b35;
+        }
+
+        .nav-item.active .nav-label {
+            opacity: 1;
+        }
+
+        .quick-suggestions {
+            background: rgba(255,107,53,0.1);
+            border-radius: 12px;
+            padding: 15px;
+            margin: 20px 0;
+            border: 1px solid rgba(255,107,53,0.2);
+        }
+
+        .suggestions-title {
+            font-size: 12px;
+            color: #ff6b35;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .suggestion-tag {
+            display: inline-block;
+            background: rgba(255,107,53,0.2);
+            color: #ff6b35;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            margin: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="status-bar">
+            9:46 AM • Route Planning • iPhone
+        </div>
+
+        <div class="planning-header">
+            <div class="header-icon">🗺️</div>
+            <div class="header-title">Plan Your Route</div>
+            <div class="header-subtitle">Create custom trips with intelligent suggestions</div>
+        </div>
+
+        <div class="planning-section">
+            <div class="section-title">📍 Trip Details</div>
+
+            <div class="input-group">
+                <label class="input-label">Trip Name</label>
+                <input type="text" class="input-field" placeholder="e.g., Mountain Adventure" value="Charlotte to Asheville">
+            </div>
+
+            <div class="location-inputs">
+                <div class="location-row">
+                    <div class="location-icon">🏁</div>
+                    <input type="text" class="input-field" placeholder="Starting point" value="Charlotte, NC">
+                </div>
+
+                <div class="location-row">
+                    <div class="location-icon">🏁</div>
+                    <input type="text" class="input-field" placeholder="Destination" value="Asheville, NC">
+                    <button class="add-stop-btn" onclick="addStop()">+</button>
+                </div>
+            </div>
+
+            <div class="preferences-section">
+                <div class="section-title" style="color: #ff6b35; margin-bottom: 10px;">🎯 Trip Preferences</div>
+
+                <div class="preference-grid">
+                    <div class="preference-item active" onclick="togglePreference(this)">
+                        <span class="preference-icon">🏛️</span>
+                        Historical
+                    </div>
+                    <div class="preference-item active" onclick="togglePreference(this)">
+                        <span class="preference-icon">🏞️</span>
+                        Scenic
+                    </div>
+                    <div class="preference-item" onclick="togglePreference(this)">
+                        <span class="preference-icon">🍽️</span>
+                        Food
+                    </div>
+                    <div class="preference-item active" onclick="togglePreference(this)">
+                        <span class="preference-icon">🏰</span>
+                        Architecture
+                    </div>
+                </div>
+
+                <div class="slider-container">
+                    <div class="slider-label">
+                        <span>Detour Tolerance</span>
+                        <span>30 min</span>
+                    </div>
+                    <div class="slider">
+                        <div class="slider-fill"></div>
+                    </div>
+                </div>
+
+                <div class="quick-suggestions">
+                    <div class="suggestions-title">💡 Suggested Stops</div>
+                    <div class="suggestion-tag">Blue Ridge Parkway</div>
+                    <div class="suggestion-tag">Biltmore Estate</div>
+                    <div class="suggestion-tag">Chimney Rock</div>
+                    <div class="suggestion-tag">Pisgah Forest</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="planning-section">
+            <div class="section-title">📊 Route Preview</div>
+
+            <div class="route-preview">
+                <div class="preview-title">Estimated Trip Details</div>
+
+                <div class="route-summary">
+                    <div class="summary-item">
+                        <span class="summary-label">Distance:</span>
+                        <span class="summary-value">127 miles</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Drive Time:</span>
+                        <span class="summary-value">2h 30m</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Suggested Stops:</span>
+                        <span class="summary-value">8 locations</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Total Time:</span>
+                        <span class="summary-value">4h 15m</span>
+                    </div>
+                </div>
+
+                <div class="poi-preview">
+                    <strong>Potential Points of Interest:</strong><br>
+                    • Fort Dobbs Historic Site (Historical)<br>
+                    • Lake Norman State Park (Scenic)<br>
+                    • Blue Ridge Parkway viewpoints<br>
+                    • Biltmore Estate and Gardens<br>
+                    • Pisgah National Forest trails
+                </div>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button class="action-btn btn-primary" onclick="generateRoute()">
+                Generate Route
+            </button>
+            <button class="action-btn btn-secondary" onclick="saveDraft()">
+                Save Draft
+            </button>
+        </div>
+
+        <div class="bottom-nav">
+            <div class="nav-item">
+                <span class="nav-icon">🏠</span>
+                <div class="nav-label">Home</div>
+            </div>
+            <div class="nav-item active">
+                <span class="nav-icon">🗺️</span>
+                <div class="nav-label">Plan</div>
+            </div>
+            <div class="nav-item">
+                <span class="nav-icon">📊</span>
+                <div class="nav-label">History</div>
+            </div>
+            <div class="nav-item">
+                <span class="nav-icon">⚙️</span>
+                <div class="nav-label">Settings</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function addStop() {
+            // Add new stop input row
+            const locationInputs = document.querySelector('.location-inputs');
+            const newRow = document.createElement('div');
+            newRow.className = 'location-row';
+            newRow.innerHTML = `
+                <div class="location-icon">📍</div>
+                <input type="text" class="input-field" placeholder="Stop location">
+                <button class="add-stop-btn" onclick="removeStop(this)">−</button>
+            `;
+            locationInputs.appendChild(newRow);
+        }
+
+        function removeStop(button) {
+            button.parentElement.remove();
+        }
+
+        function togglePreference(item) {
+            item.classList.toggle('active');
+        }
+
+        function generateRoute() {
+            // Simulate route generation
+            alert('Generating intelligent route with POI suggestions...');
+        }
+
+        function saveDraft() {
+            alert('Route saved as draft. You can continue editing later.');
+        }
+    </script>
+</body>
+</html>

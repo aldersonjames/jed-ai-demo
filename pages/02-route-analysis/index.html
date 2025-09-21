@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Stitch Design</title>
+<link href="data:image/x-icon;base64," rel="icon" type="image/x-icon"/>
+<link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect"/>
+<link as="style" href="https://fonts.googleapis.com/css2?display=swap&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900&amp;family=Space+Grotesk%3Awght%40400%3B500%3B700" onload="this.rel='stylesheet'" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#1193d4",
+              "background-light": "#f6f7f8",
+              "background-dark": "#101c22",
+            },
+            fontFamily: {
+              display: ["Space Grotesk"],
+            },
+            borderRadius: { DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px" },
+          },
+        },
+      };
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+      }
+    </style>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display">
+<div class="flex h-full min-h-screen flex-col">
+<header class="sticky top-0 z-10 flex items-center border-b border-white/10 bg-background-light/80 px-4 py-3 backdrop-blur-sm dark:bg-background-dark/80">
+<button class="text-black dark:text-white">
+<svg class="h-6 w-6" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<polyline points="15 18 9 12 15 6"></polyline>
+</svg>
+</button>
+<h1 class="flex-1 text-center text-lg font-bold text-black dark:text-white pr-6">Route Analysis</h1>
+</header>
+<main class="flex-1 overflow-y-auto">
+<div class="p-4">
+<div class="space-y-2 rounded-lg bg-background-light dark:bg-black/20 p-4">
+<div class="flex items-center gap-4">
+<div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-primary/20 text-primary">
+<span class="material-symbols-outlined">schedule</span>
+</div>
+<div>
+<p class="text-sm text-black/60 dark:text-white/60">Total Duration</p>
+<p class="font-bold text-black dark:text-white">12h 30m</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-primary/20 text-primary">
+<span class="material-symbols-outlined">map</span>
+</div>
+<div>
+<p class="text-sm text-black/60 dark:text-white/60">Total Distance</p>
+<p class="font-bold text-black dark:text-white">750 km</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-primary/20 text-primary">
+<span class="material-symbols-outlined">flag</span>
+</div>
+<div>
+<p class="text-sm text-black/60 dark:text-white/60">Number of Stops</p>
+<p class="font-bold text-black dark:text-white">5</p>
+</div>
+</div>
+</div>
+<h2 class="mt-6 mb-4 text-lg font-bold text-black dark:text-white">Detected Stops</h2>
+<div class="space-y-2">
+<div class="flex items-center gap-4 rounded-lg bg-background-light dark:bg-black/20 p-3">
+<div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/20 text-primary">
+<span class="material-symbols-outlined">restaurant</span>
+</div>
+<div class="flex-1">
+<p class="font-bold text-black dark:text-white">The Cozy Corner</p>
+<p class="text-sm text-black/60 dark:text-white/60">Restaurant</p>
+</div>
+</div>
+<div class="flex items-center gap-4 rounded-lg bg-background-light dark:bg-black/20 p-3">
+<div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/20 text-primary">
+<span class="material-symbols-outlined">photo_camera</span>
+</div>
+<div class="flex-1">
+<p class="font-bold text-black dark:text-white">Vista Point</p>
+<p class="text-sm text-black/60 dark:text-white/60">Scenic View</p>
+</div>
+</div>
+<div class="flex items-center gap-4 rounded-lg bg-background-light dark:bg-black/20 p-3">
+<div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/20 text-primary">
+<span class="material-symbols-outlined">account_balance</span>
+</div>
+<div class="flex-1">
+<p class="font-bold text-black dark:text-white">Old Town Square</p>
+<p class="text-sm text-black/60 dark:text-white/60">Historical Site</p>
+</div>
+</div>
+<div class="flex items-center gap-4 rounded-lg bg-background-light dark:bg-black/20 p-3">
+<div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/20 text-primary">
+<span class="material-symbols-outlined">restaurant</span>
+</div>
+<div class="flex-1">
+<p class="font-bold text-black dark:text-white">The Hungry Traveler</p>
+<p class="text-sm text-black/60 dark:text-white/60">Restaurant</p>
+</div>
+</div>
+<div class="flex items-center gap-4 rounded-lg bg-background-light dark:bg-black/20 p-3">
+<div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/20 text-primary">
+<span class="material-symbols-outlined">terrain</span>
+</div>
+<div class="flex-1">
+<p class="font-bold text-black dark:text-white">Lake Serenity</p>
+<p class="text-sm text-black/60 dark:text-white/60">Scenic View</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+<footer class="sticky bottom-0 bg-background-light/80 p-4 backdrop-blur-sm dark:bg-background-dark/80">
+<button class="w-full rounded-lg bg-primary py-3 text-base font-bold text-white shadow-lg shadow-primary/30">Start Trip</button>
+</footer>
+</div>
+
+</body></html>

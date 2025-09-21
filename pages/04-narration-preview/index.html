@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TravelNarrator - Narration Preview</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#1193d4",
+              "background-light": "#f6f7f8",
+              "background-dark": "#101c22",
+            },
+            fontFamily: {
+              display: ["Space Grotesk", "sans-serif"],
+            },
+            borderRadius: {
+              DEFAULT: "0.25rem",
+              lg: "0.5rem",
+              xl: "0.75rem",
+              full: "9999px",
+            },
+          },
+        },
+      };
+    </script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings:
+        'FILL' 1,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24
+      }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-gray-800 dark:text-gray-200">
+<div class="min-h-screen flex flex-col">
+<header class="sticky top-0 z-10 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm">
+<div class="flex items-center p-4">
+<button class="p-2 -ml-2 text-gray-600 dark:text-gray-300">
+<span class="material-symbols-outlined"> arrow_back </span>
+</button>
+<h1 class="text-xl font-bold text-center flex-1 text-gray-900 dark:text-white">Route Analysis</h1>
+<div class="w-10"></div>
+</div>
+</header>
+<main class="flex-grow pb-24">
+<section class="p-4">
+<h2 class="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Trip Narration</h2>
+<div class="space-y-2">
+<div class="flex items-center gap-4 p-3 rounded-lg bg-background-light dark:bg-gray-800/50">
+<div class="bg-primary/20 text-primary p-3 rounded-lg flex-shrink-0">
+<span class="material-symbols-outlined">near_me</span>
+</div>
+<div>
+<p class="font-bold text-gray-900 dark:text-white">Start: San Francisco</p>
+<p class="text-sm text-gray-500 dark:text-gray-400">10:00 AM</p>
+</div>
+</div>
+<div class="flex items-center gap-4 p-3 rounded-lg bg-background-light dark:bg-gray-800/50">
+<div class="bg-primary/20 text-primary p-3 rounded-lg flex-shrink-0">
+<span class="material-symbols-outlined">location_on</span>
+</div>
+<div>
+<p class="font-bold text-gray-900 dark:text-white">Stop 1: Santa Cruz</p>
+<p class="text-sm text-gray-500 dark:text-gray-400">12:00 PM</p>
+</div>
+</div>
+<div class="flex items-center gap-4 p-3 rounded-lg bg-background-light dark:bg-gray-800/50">
+<div class="bg-primary/20 text-primary p-3 rounded-lg flex-shrink-0">
+<span class="material-symbols-outlined">location_on</span>
+</div>
+<div>
+<p class="font-bold text-gray-900 dark:text-white">Stop 2: Monterey</p>
+<p class="text-sm text-gray-500 dark:text-gray-400">2:00 PM</p>
+</div>
+</div>
+<div class="flex items-center gap-4 p-3 rounded-lg bg-background-light dark:bg-gray-800/50">
+<div class="bg-primary/20 text-primary p-3 rounded-lg flex-shrink-0">
+<span class="material-symbols-outlined">flag</span>
+</div>
+<div>
+<p class="font-bold text-gray-900 dark:text-white">End: Big Sur</p>
+<p class="text-sm text-gray-500 dark:text-gray-400">4:00 PM</p>
+</div>
+</div>
+</div>
+</section>
+<section class="p-4">
+<h2 class="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Narration Preview</h2>
+<div class="bg-white dark:bg-gray-800/50 rounded-xl p-4 shadow-sm">
+<div class="flex items-center gap-4">
+<img alt="Santa Cruz" class="size-14 rounded-lg object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAA8Whi9ACziq53UOBudgNZPN9lbzVb0BsrymRYwC_NuuJyf9alRJIOx4k0-Kwc1vmhsOeNPV_wHyQVwGpsnJ9RjQYt-2OR1PU3L-Rk-8tstia3uZ_5zODGaDWIelNMnlK2MZGjCzPrv52-l1SQ4WwvbKmkPQG5I7j0ufJiPQHMRNE55bIU0Cm0eaFAXozrTgLPyrzgUMO5294-4j-PTTCL10ZM-aP3DrnNG1yTlmn-84x2HuKiK2zv_Gcsr0J8DGABYTtOsyT1YL4"/>
+<div class="flex-1">
+<p class="font-bold text-lg text-gray-900 dark:text-white">Santa Cruz Narration</p>
+<p class="text-sm text-gray-500 dark:text-gray-400">TravelNarrator</p>
+</div>
+<button class="flex items-center justify-center size-12 rounded-full bg-primary text-white flex-shrink-0">
+<span class="material-symbols-outlined text-3xl">play_arrow</span>
+</button>
+</div>
+<p class="mt-4 text-gray-600 dark:text-gray-300">
+              Santa Cruz, a coastal city known for its beautiful beaches and vibrant boardwalk, offers a mix of natural beauty and lively entertainment. The city's iconic pier, built in 1914, is a popular spot for fishing and enjoying ocean views.
+            </p>
+</div>
+<div class="mt-6 space-y-4">
+<div>
+<label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" for="voice">Voice</label>
+<select class="form-select w-full rounded-lg border-gray-300 dark:border-gray-600 bg-background-light dark:bg-gray-700 text-gray-900 dark:text-white focus:border-primary focus:ring-primary" id="voice">
+<option>Female (US)</option>
+<option>Male (US)</option>
+<option>Female (UK)</option>
+<option>Male (UK)</option>
+</select>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" for="narration-style">Narration Style</label>
+<select class="form-select w-full rounded-lg border-gray-300 dark:border-gray-600 bg-background-light dark:bg-gray-700 text-gray-900 dark:text-white focus:border-primary focus:ring-primary" id="narration-style">
+<option>Detailed</option>
+<option>Concise</option>
+<option>Humorous</option>
+</select>
+</div>
+</div>
+</section>
+</main>
+<footer class="fixed bottom-0 left-0 right-0 p-4 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm border-t border-gray-200 dark:border-gray-800">
+<div class="flex gap-4">
+<button class="flex-1 py-3 px-4 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-bold">Back</button>
+<button class="flex-1 py-3 px-4 rounded-lg bg-primary text-white font-bold">Start Trip</button>
+</div>
+</footer>
+</div>
+
+</body></html>

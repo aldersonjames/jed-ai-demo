@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trip History - Google Maps Copilot Narrator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #000;
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .app-container {
+            max-width: 375px;
+            margin: 0 auto;
+            background: #1a1a1a;
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        .status-bar {
+            background: #000;
+            padding: 8px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+            color: white;
+        }
+
+        .history-header {
+            padding: 20px;
+            background: linear-gradient(135deg, #007AFF 0%, #0056CC 100%);
+            text-align: center;
+        }
+
+        .header-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .header-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .stats-bar {
+            padding: 15px 20px;
+            background: #2a2a2a;
+            display: flex;
+            justify-content: space-around;
+            border-bottom: 1px solid #3a3a3a;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 18px;
+            font-weight: 600;
+            color: #007AFF;
+        }
+
+        .stat-label {
+            font-size: 10px;
+            opacity: 0.7;
+            margin-top: 2px;
+        }
+
+        .history-section {
+            padding: 20px;
+            background: #1a1a1a;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #007AFF;
+        }
+
+        .trip-card {
+            background: #2a2a2a;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 12px;
+            border-left: 4px solid #007AFF;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .trip-card:hover {
+            background: #323232;
+        }
+
+        .trip-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .trip-route {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .trip-date {
+            font-size: 12px;
+            color: #007AFF;
+            font-weight: 500;
+        }
+
+        .trip-details {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 8px;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 11px;
+            opacity: 0.8;
+        }
+
+        .detail-icon {
+            width: 12px;
+            height: 12px;
+        }
+
+        .trip-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .trip-stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .stat-label {
+            font-size: 9px;
+            opacity: 0.6;
+        }
+
+        .trip-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 6px;
+            background: rgba(255,255,255,0.05);
+            color: white;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .action-btn.primary {
+            background: #007AFF;
+            border-color: #007AFF;
+        }
+
+        .action-btn:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .action-btn.primary:hover {
+            background: #0056CC;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+        }
+
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        .empty-title {
+            font-size: 16px;
+            margin-bottom: 8px;
+            color: #999;
+        }
+
+        .empty-description {
+            font-size: 12px;
+            opacity: 0.7;
+            line-height: 1.4;
+        }
+
+        .search-section {
+            padding: 20px;
+            background: #2a2a2a;
+            border-bottom: 1px solid #3a3a3a;
+        }
+
+        .search-bar {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 20px;
+            padding: 10px 15px;
+            color: white;
+            font-size: 14px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .search-input {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 14px;
+            flex: 1;
+            outline: none;
+        }
+
+        .search-input::placeholder {
+            color: rgba(255,255,255,0.5);
+        }
+
+        .bottom-nav {
+            padding: 15px 20px;
+            background: #2a2a2a;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .nav-item {
+            text-align: center;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .nav-icon {
+            font-size: 20px;
+            margin-bottom: 2px;
+            display: block;
+        }
+
+        .nav-label {
+            font-size: 10px;
+            opacity: 0.7;
+        }
+
+        .nav-item.active .nav-icon {
+            color: #007AFF;
+        }
+
+        .nav-item.active .nav-label {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="status-bar">
+            9:44 AM • Trip History • iPhone
+        </div>
+
+        <div class="history-header">
+            <div class="header-icon">📊</div>
+            <div class="header-title">Trip History</div>
+            <div class="header-subtitle">Your completed journeys and saved routes</div>
+        </div>
+
+        <div class="stats-bar">
+            <div class="stat-item">
+                <div class="stat-number">12</div>
+                <div class="stat-label">Total Trips</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">847</div>
+                <div class="stat-label">Miles Driven</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">156</div>
+                <div class="stat-label">POIs Visited</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">23h</div>
+                <div class="stat-label">Total Time</div>
+            </div>
+        </div>
+
+        <div class="search-section">
+            <div class="search-bar">
+                <span>🔍</span>
+                <input type="text" class="search-input" placeholder="Search trips...">
+            </div>
+        </div>
+
+        <div class="history-section">
+            <div class="section-title">📅 Recent Trips</div>
+
+            <div class="trip-card">
+                <div class="trip-header">
+                    <div class="trip-route">Charlotte → Asheville</div>
+                    <div class="trip-date">2 days ago</div>
+                </div>
+                <div class="trip-details">
+                    <div class="detail-item">
+                        <span>📏</span>
+                        127 miles
+                    </div>
+                    <div class="detail-item">
+                        <span>⏱️</span>
+                        3h 24m
+                    </div>
+                    <div class="detail-item">
+                        <span>🎯</span>
+                        8 POIs
+                    </div>
+                </div>
+                <div class="trip-stats">
+                    <div class="trip-stat">
+                        <div class="stat-value">4.8★</div>
+                        <div class="stat-label">Rating</div>
+                    </div>
+                    <div class="trip-stat">
+                        <div class="stat-value">23</div>
+                        <div class="stat-label">Narrations</div>
+                    </div>
+                    <div class="trip-stat">
+                        <div class="stat-value">2</div>
+                        <div class="stat-label">Stops</div>
+                    </div>
+                </div>
+                <div class="trip-actions">
+                    <button class="action-btn primary">Repeat Trip</button>
+                    <button class="action-btn">View Details</button>
+                </div>
+            </div>
+
+            <div class="trip-card">
+                <div class="trip-header">
+                    <div class="trip-route">Raleigh → Charlotte</div>
+                    <div class="trip-date">1 week ago</div>
+                </div>
+                <div class="trip-details">
+                    <div class="detail-item">
+                        <span>📏</span>
+                        165 miles
+                    </div>
+                    <div class="detail-item">
+                        <span>⏱️</span>
+                        2h 58m
+                    </div>
+                    <div class="detail-item">
+                        <span>🎯</span>
+                        12 POIs
+                    </div>
+                </div>
+                <div class="trip-stats">
+                    <div class="trip-stat">
+                        <div class="stat-value">4.9★</div>
+                        <div class="stat-label">Rating</div>
+                    </div>
+                    <div class="trip-stat">
+                        <div class="stat-value">34</div>
+                        <div class="stat-label">Narrations</div>
+                    </div>
+                    <div class="trip-stat">
+                        <div class="stat-value">3</div>
+                        <div class="stat-label">Stops</div>
+                    </div>
+                </div>
+                <div class="trip-actions">
+                    <button class="action-btn primary">Repeat Trip</button>
+                    <button class="action-btn">View Details</button>
+                </div>
+            </div>
+
+            <div class="trip-card">
+                <div class="trip-header">
+                    <div class="trip-route">Asheville → Boone</div>
+                    <div class="trip-date">2 weeks ago</div>
+                </div>
+                <div class="trip-details">
+                    <div class="detail-item">
+                        <span>📏</span>
+                        89 miles
+                    </div>
+                    <div class="detail-item">
+                        <span>⏱️</span>
+                        2h 15m
+                    </div>
+                    <div class="detail-item">
+                        <span>🎯</span>
+                        15 POIs
+                    </div>
+                </div>
+                <div class="trip-stats">
+                    <div class="trip-stat">
+                        <div class="stat-value">4.7★</div>
+                        <div class="stat-label">Rating</div>
+                    </div>
+                    <div class="trip-stat">
+                        <div class="stat-value">41</div>
+                        <div class="stat-label">Narrations</div>
+                    </div>
+                    <div class="trip-stat">
+                        <div class="stat-value">5</div>
+                        <div class="stat-label">Stops</div>
+                    </div>
+                </div>
+                <div class="trip-actions">
+                    <button class="action-btn primary">Repeat Trip</button>
+                    <button class="action-btn">View Details</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom-nav">
+            <div class="nav-item">
+                <span class="nav-icon">🏠</span>
+                <div class="nav-label">Home</div>
+            </div>
+            <div class="nav-item active">
+                <span class="nav-icon">📊</span>
+                <div class="nav-label">History</div>
+            </div>
+            <div class="nav-item">
+                <span class="nav-icon">🗺️</span>
+                <div class="nav-label">Trips</div>
+            </div>
+            <div class="nav-item">
+                <span class="nav-icon">👤</span>
+                <div class="nav-label">Profile</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

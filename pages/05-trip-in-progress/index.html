@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trip in Progress - Google Maps Copilot Narrator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #000;
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .app-container {
+            max-width: 375px;
+            margin: 0 auto;
+            background: #1a1a1a;
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        .status-bar {
+            background: #000;
+            padding: 8px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+            color: white;
+        }
+
+        .trip-header {
+            padding: 20px;
+            background: linear-gradient(135deg, #007AFF 0%, #0056CC 100%);
+            text-align: center;
+        }
+
+        .trip-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .trip-progress {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: white;
+            width: 45%;
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+
+        .current-location {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .location-icon {
+            width: 12px;
+            height: 12px;
+            background: white;
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .location-pulse {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: white;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(2); opacity: 0; }
+        }
+
+        .narration-controls {
+            padding: 20px;
+            background: #2a2a2a;
+            border-bottom: 1px solid #3a3a3a;
+        }
+
+        .control-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .control-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background: #007AFF;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .control-btn:active {
+            transform: scale(0.95);
+        }
+
+        .control-btn.play-pause {
+            width: 50px;
+            height: 50px;
+            background: #ff6b35;
+            font-size: 20px;
+        }
+
+        .volume-slider {
+            width: 80px;
+            height: 4px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 2px;
+            cursor: pointer;
+        }
+
+        .volume-fill {
+            height: 100%;
+            background: #007AFF;
+            width: 70%;
+            border-radius: 2px;
+        }
+
+        .mute-btn {
+            background: rgba(255,255,255,0.1);
+            font-size: 14px;
+        }
+
+        .upcoming-section {
+            padding: 20px;
+            background: #1a1a1a;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #007AFF;
+        }
+
+        .upcoming-item {
+            background: #2a2a2a;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-left: 4px solid #007AFF;
+        }
+
+        .item-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .item-title {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .item-distance {
+            font-size: 12px;
+            color: #007AFF;
+            font-weight: 500;
+        }
+
+        .item-description {
+            font-size: 12px;
+            opacity: 0.7;
+            line-height: 1.4;
+        }
+
+        .item-category {
+            font-size: 10px;
+            background: rgba(0,122,255,0.2);
+            color: #007AFF;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-top: 5px;
+            display: inline-block;
+        }
+
+        .next-narration {
+            background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 10px;
+        }
+
+        .next-title {
+            font-size: 12px;
+            opacity: 0.8;
+            margin-bottom: 5px;
+        }
+
+        .next-content {
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .quick-actions {
+            padding: 20px;
+            background: #2a2a2a;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .quick-action {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 15px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .quick-action:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .action-icon {
+            font-size: 20px;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .action-label {
+            font-size: 10px;
+            opacity: 0.8;
+        }
+
+        .emergency-controls {
+            background: #2a2a2a;
+            padding: 15px 20px;
+            border-top: 1px solid #3a3a3a;
+        }
+
+        .emergency-btn {
+            width: 100%;
+            padding: 12px;
+            background: #ff3b30;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="status-bar">
+            9:41 AM • 📍 GPS Active • 🔊 Audio On
+        </div>
+
+        <div class="trip-header">
+            <div class="trip-title">Charlotte → Asheville</div>
+            <div class="trip-progress">Trip in Progress • 45% Complete</div>
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+            <div class="current-location">
+                <div class="location-icon">
+                    <div class="location-pulse"></div>
+                </div>
+                Near Statesville, NC
+            </div>
+        </div>
+
+        <div class="narration-controls">
+            <div class="control-row">
+                <div class="control-group">
+                    <button class="control-btn">⏮️</button>
+                    <button class="control-btn play-pause">⏸️</button>
+                    <button class="control-btn">⏭️</button>
+                </div>
+                <div class="control-group">
+                    <button class="control-btn mute-btn">🔇</button>
+                    <div class="volume-slider">
+                        <div class="volume-fill"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="upcoming-section">
+            <div class="section-title">🎯 Upcoming Points of Interest</div>
+
+            <div class="upcoming-item">
+                <div class="item-header">
+                    <div class="item-title">Fort Dobbs State Historic Site</div>
+                    <div class="item-distance">2.3 mi</div>
+                </div>
+                <div class="item-description">
+                    French and Indian War fort established in 1756. Served as an important frontier outpost during colonial conflicts.
+                </div>
+                <div class="item-category">Historical</div>
+            </div>
+
+            <div class="upcoming-item">
+                <div class="item-header">
+                    <div class="item-title">Lake Norman State Park</div>
+                    <div class="item-distance">8.7 mi</div>
+                </div>
+                <div class="item-description">
+                    Beautiful reservoir perfect for picnics and water activities. Popular spot for fishing and boating.
+                </div>
+                <div class="item-category">Scenic</div>
+            </div>
+
+            <div class="next-narration">
+                <div class="next-title">Next Narration (1.2 mi)</div>
+                <div class="next-content">
+                    "Coming up on your left is the historic Fort Dobbs, established in 1756 during the French and Indian War..."
+                </div>
+            </div>
+        </div>
+
+        <div class="quick-actions">
+            <div class="quick-action">
+                <span class="action-icon">📍</span>
+                <div class="action-label">View Map</div>
+            </div>
+            <div class="quick-action">
+                <span class="action-icon">🎵</span>
+                <div class="action-label">Skip</div>
+            </div>
+            <div class="quick-action">
+                <span class="action-icon">⏸️</span>
+                <div class="action-label">Pause Trip</div>
+            </div>
+        </div>
+
+        <div class="emergency-controls">
+            <button class="emergency-btn">
+                🚨 Emergency Stop
+            </button>
+        </div>
+    </div>
+</body>
+</html>

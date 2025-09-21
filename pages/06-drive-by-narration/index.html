@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drive-by Narration - Google Maps Copilot Narrator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #000;
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .app-container {
+            max-width: 375px;
+            margin: 0 auto;
+            background: #1a1a1a;
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        .status-bar {
+            background: #000;
+            padding: 8px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+            color: white;
+        }
+
+        .narration-header {
+            padding: 20px;
+            background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
+            text-align: center;
+        }
+
+        .narration-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        .narration-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .narration-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .content-section {
+            padding: 20px;
+            background: #1a1a1a;
+        }
+
+        .poi-card {
+            background: #2a2a2a;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #ff6b35;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .poi-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(255,107,53,0.1) 50%, transparent 70%);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .poi-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .poi-title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .distance-badge {
+            background: rgba(255,107,53,0.2);
+            color: #ff6b35;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .poi-description {
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 12px;
+            opacity: 0.9;
+        }
+
+        .poi-category {
+            display: inline-block;
+            background: rgba(255,107,53,0.2);
+            color: #ff6b35;
+            padding: 4px 8px;
+            border-radius: 8px;
+            font-size: 10px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .narration-script {
+            background: rgba(255,107,53,0.1);
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 15px;
+            border: 1px solid rgba(255,107,53,0.2);
+        }
+
+        .script-label {
+            font-size: 12px;
+            color: #ff6b35;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .script-content {
+            font-size: 14px;
+            line-height: 1.6;
+            font-style: italic;
+        }
+
+        .controls-section {
+            padding: 20px;
+            background: #2a2a2a;
+            border-top: 1px solid #3a3a3a;
+        }
+
+        .control-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .control-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 22px;
+            border: none;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .control-btn:active {
+            transform: scale(0.95);
+        }
+
+        .control-btn.primary {
+            background: #ff6b35;
+        }
+
+        .speed-slider {
+            width: 100px;
+            height: 4px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 2px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .speed-fill {
+            height: 100%;
+            background: #ff6b35;
+            width: 60%;
+            border-radius: 2px;
+        }
+
+        .speed-label {
+            font-size: 10px;
+            color: #ff6b35;
+            margin-top: 5px;
+            text-align: center;
+        }
+
+        .recent-narrations {
+            padding: 20px;
+            background: #1a1a1a;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #ff6b35;
+        }
+
+        .narration-item {
+            background: #2a2a2a;
+            border-radius: 12px;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border-left: 3px solid rgba(255,107,53,0.3);
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .item-time {
+            color: #ff6b35;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .bottom-actions {
+            padding: 20px;
+            background: #2a2a2a;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .bottom-btn {
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background: #ff6b35;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .btn-secondary:active {
+            background: rgba(255,255,255,0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="status-bar">
+            9:42 AM • 📍 Statesville, NC • 🎙️ Narrating
+        </div>
+
+        <div class="narration-header">
+            <div class="narration-icon">🎙️</div>
+            <div class="narration-title">Drive-by Narration Active</div>
+            <div class="narration-subtitle">Learning about places as you pass them</div>
+        </div>
+
+        <div class="content-section">
+            <div class="poi-card">
+                <div class="poi-header">
+                    <div class="poi-title">Fort Dobbs State Historic Site</div>
+                    <div class="distance-badge">Just Passed</div>
+                </div>
+                <div class="poi-description">
+                    Established in 1756 during the French and Indian War, Fort Dobbs served as a crucial frontier outpost protecting colonial settlements from Native American attacks and French forces.
+                </div>
+                <div class="poi-category">Historical Site</div>
+
+                <div class="narration-script">
+                    <div class="script-label">Narration Script:</div>
+                    <div class="script-content">
+                        "You just passed Fort Dobbs State Historic Site on your left. Built in 1756 during the French and Indian War, this fort served as a vital frontier outpost, protecting colonial settlers from potential attacks by Native American forces allied with the French."
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls-section">
+            <div class="control-row">
+                <div class="control-group">
+                    <button class="control-btn">⏮️</button>
+                    <button class="control-btn primary">🔊</button>
+                    <button class="control-btn">⏭️</button>
+                </div>
+                <div class="control-group">
+                    <div class="speed-slider">
+                        <div class="speed-fill"></div>
+                    </div>
+                    <div class="speed-label">Speed: Normal</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="recent-narrations">
+            <div class="section-title">📜 Recent Narrations</div>
+
+            <div class="narration-item">
+                <div class="item-time">2 min ago</div>
+                "Statesville was founded in 1789 and named after..."
+            </div>
+
+            <div class="narration-item">
+                <div class="item-time">5 min ago</div>
+                "The area around Lake Norman was created when..."
+            </div>
+
+            <div class="narration-item">
+                <div class="item-time">8 min ago</div>
+                "I-77 was completed in 1975 and connects..."
+            </div>
+        </div>
+
+        <div class="bottom-actions">
+            <button class="bottom-btn btn-primary">
+                🎯 View All POIs
+            </button>
+            <button class="bottom-btn btn-secondary">
+                ⏸️ Pause Narration
+            </button>
+        </div>
+    </div>
+</body>
+</html>

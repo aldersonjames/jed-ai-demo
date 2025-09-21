@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Onboarding - Google Maps Copilot Narrator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #000;
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .app-container {
+            max-width: 375px;
+            margin: 0 auto;
+            background: #1a1a1a;
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        .status-bar {
+            background: #000;
+            padding: 8px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+            color: white;
+        }
+
+        .onboarding-slide {
+            min-height: 600px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            text-align: center;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+        }
+
+        .slide-indicator {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 30px;
+        }
+
+        .indicator-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transition: all 0.3s ease;
+        }
+
+        .indicator-dot.active {
+            background: #007AFF;
+            transform: scale(1.2);
+        }
+
+        .slide-icon {
+            font-size: 80px;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .slide-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #007AFF;
+        }
+
+        .slide-description {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            opacity: 0.9;
+            max-width: 300px;
+        }
+
+        .slide-action {
+            padding: 15px 30px;
+            background: #007AFF;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .slide-action:hover {
+            background: #0056CC;
+            transform: translateY(-2px);
+        }
+
+        .skip-link {
+            color: rgba(255,255,255,0.6);
+            font-size: 14px;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .skip-link:hover {
+            color: #007AFF;
+        }
+
+        .feature-list {
+            text-align: left;
+            max-width: 280px;
+            margin: 20px auto;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+        }
+
+        .feature-icon {
+            width: 24px;
+            height: 24px;
+            background: #007AFF;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .feature-text {
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .voice-preview {
+            background: rgba(0,122,255,0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid rgba(0,122,255,0.2);
+        }
+
+        .voice-title {
+            font-size: 14px;
+            color: #007AFF;
+            margin-bottom: 10px;
+        }
+
+        .voice-sample {
+            font-size: 16px;
+            font-style: italic;
+            line-height: 1.5;
+        }
+
+        .progress-section {
+            margin-top: 30px;
+        }
+
+        .progress-text {
+            font-size: 12px;
+            opacity: 0.7;
+            margin-bottom: 10px;
+        }
+
+        .completion-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .completion-btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #007AFF;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="status-bar">
+            9:45 AM • Welcome to Copilot Narrator • iPhone
+        </div>
+
+        <div class="onboarding-slide" id="slide1">
+            <div class="slide-indicator">
+                <div class="indicator-dot active"></div>
+                <div class="indicator-dot"></div>
+                <div class="indicator-dot"></div>
+                <div class="indicator-dot"></div>
+                <div class="indicator-dot"></div>
+            </div>
+
+            <div class="slide-icon">🗺️</div>
+            <div class="slide-title">Welcome to Copilot Narrator</div>
+            <div class="slide-description">
+                Transform your road trips into educational adventures with intelligent narration about every place you pass.
+            </div>
+
+            <button class="slide-action" onclick="nextSlide()">
+                Get Started
+            </button>
+
+            <a href="#" class="skip-link" onclick="skipOnboarding()">
+                Skip Tutorial
+            </a>
+        </div>
+
+        <div class="onboarding-slide" id="slide2" style="display: none;">
+            <div class="slide-indicator">
+                <div class="indicator-dot"></div>
+                <div class="indicator-dot active"></div>
+                <div class="indicator-dot"></div>
+                <div class="indicator-dot"></div>
+                <div class="indicator-dot"></div>
+            </div>
+
+            <div class="slide-icon">📍</div>
+            <div class="slide-title">Import Your Routes</div>
+            <div class="slide-description">
+                Simply paste any Google Maps URL and we'll automatically analyze your route for fascinating points of interest.
+            </div>
+
+            <div class="feature-list">
+                <div class="feature-item">
+                    <div class="feature-icon">🔗</div>
+                    <div class="feature-text">Import any Google Maps trip instantly</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🎯</div>
+                    <div class="feature-text">Discover optimal stops and detours</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">⚡</div>
+                    <div class="feature-text">Analysis completed in seconds</div>
+                </div>
+            </div>
+
+            <button class="slide-action" onclick="nextSlide()">
+                Continue
+            </button>
+        </div>
+
+        <div class="onboarding-slide" id="slide3" style="display: none;">
+            <div class="slide-indicator">
+                <div class="indicator-dot"></div>
+                <div class="indicator-dot"></div>
+                <div class="indicator-dot active"></div>
+                <div class="indicator-dot"></div>
+                <div class="indicator-dot"></div>
+            </div>
+
+            <div class="slide-icon">🎙️</div>
+            <div class="slide-title">Professional Narration</div>
+            <div class="slide-description">
+                Experience professional voice narration with perfect timing and engaging storytelling about historical sites, scenic views, and local attractions.
+            </div>
+
+            <div class="voice-preview">
+                <div class="voice-title">Voice Preview:</div>
+                <div class="voice-sample">
+                    "Coming up on your left is the historic Fort Dobbs, established in 1756 during the French and Indian War..."
+                </div>
+            </div>
+
+            <button class="slide-action" onclick="nextSlide()">
+                Continue
+            </button>
+        </div>
+
+        <div class="onboarding-slide" id="slide4" style="display: none;">
+            <div class="slide-indicator">
+                <div class="indicator-dot"></div>
+                <div class="indicator-dot"></div>
+                <div class="indicator-dot"></div>
+                <div class="indicator-dot active"></div>
+                <div class="indicator-dot"></div>
+            </div>
+
+            <div class="slide-icon">⚙️</div>
+            <div class="slide-title">Personalize Your Experience</div>
+            <div class="slide-description">
+                Choose your interests, set detour preferences, and customize when and how you want to hear narration.
+            </div>
+
+            <div class="feature-list">
+                <div class="feature-item">
+                    <div class="feature-icon">🎯</div>
+                    <div class="feature-text">Select interest categories</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">⏱️</div>
+                    <div class="feature-text">Set detour time limits</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🔊</div>
+                    <div class="feature-text">Choose your narrator voice</div>
+                </div>
+            </div>
+
+            <button class="slide-action" onclick="nextSlide()">
+                Continue
+            </button>
+        </div>
+
+        <div class="onboarding-slide" id="slide5" style="display: none;">
+            <div class="slide-indicator">
+                <div class="indicator-dot"></div>
+                <div class="indicator-dot"></div>
+                <div class="indicator-dot"></div>
+                <div class="indicator-dot"></div>
+                <div class="indicator-dot active"></div>
+            </div>
+
+            <div class="slide-icon">🚗</div>
+            <div class="slide-title">Ready for Your First Trip?</div>
+            <div class="slide-description">
+                You're all set! Start by importing a Google Maps route and discover the fascinating stories along your journey.
+            </div>
+
+            <div class="progress-section">
+                <div class="progress-text">Setup Complete • Ready to Drive</div>
+            </div>
+
+            <div class="completion-actions">
+                <button class="completion-btn btn-primary" onclick="completeOnboarding()">
+                    Start My First Trip
+                </button>
+                <button class="completion-btn btn-secondary" onclick="goToSettings()">
+                    Customize Settings
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+
+        function nextSlide() {
+            if (currentSlide < 5) {
+                document.getElementById(`slide${currentSlide}`).style.display = 'none';
+                currentSlide++;
+                document.getElementById(`slide${currentSlide}`).style.display = 'flex';
+
+                // Update indicators
+                updateIndicators();
+            }
+        }
+
+        function updateIndicators() {
+            const dots = document.querySelectorAll('.indicator-dot');
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentSlide - 1);
+            });
+        }
+
+        function skipOnboarding() {
+            completeOnboarding();
+        }
+
+        function completeOnboarding() {
+            // Store completion in localStorage
+            localStorage.setItem('onboardingComplete', 'true');
+            // Redirect to main app
+            window.location.href = '../01-import-route/index.html';
+        }
+
+        function goToSettings() {
+            window.location.href = '../07-settings/index.html';
+        }
+
+        // Check if onboarding was already completed
+        if (localStorage.getItem('onboardingComplete') === 'true') {
+            window.location.href = '../01-import-route/index.html';
+        }
+    </script>
+</body>
+</html>

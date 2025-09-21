@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Google Maps Narrator - Your Personal Tour Guide</title>
+    <link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect"/>
+    <link as="style" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&amp;family=Merriweather:wght@400;700&amp;display=swap" onload="this.rel='stylesheet'" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#2B5CE6",
+              secondary: "#FF8C42", 
+              accent: "#FFFFFF",
+              danger: "#EA4335",
+              "background-light": "#000000",
+              "background-dark": "#000000",
+              "text-primary": "#2B5CE6",
+              "text-secondary": "#FF8C42",
+              "text-accent": "#FFFFFF"
+            },
+            fontFamily: {
+              display: ["Merriweather", "serif"],
+              title: ["Playfair Display", "serif"],
+              body: ["Merriweather", "serif"]
+            },
+            borderRadius: {
+              DEFAULT: "0.25rem",
+              lg: "0.5rem",
+              xl: "0.75rem",
+              full: "9999px",
+            },
+          },
+        },
+      };
+    </script>
+  <style>
+    body {
+      min-height: 100dvh;
+      background-color: #000000;
+    }
+    .distressed-texture {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%' height='100%'%3E%3Cdefs%3E%3Cpattern id='smallGrid' width='10' height='10' patternUnits='userSpaceOnUse'%3E%3Cpath d='M 10 0 L 0 0 0 10' style='fill:none;stroke:rgba(255,255,255,0.1);stroke-width:1' /%3E%3C/pattern%3E%3Cpattern id='grid' width='50' height='50' patternUnits='userSpaceOnUse'%3E%3Cpath d='M 50 0 L 0 0 0 50' style='fill:none;stroke:rgba(255,255,255,0.2);stroke-width:2' /%3E%3Cuse xlink:href='%23smallGrid' /%3E%3C/pattern%3E%3C/defs%3E%3Crect width='100%' height='100%' fill='url(%23grid)' /%3E%3C/svg%3E");
+        opacity: 0.2;
+    }
+  </style>
+</head>
+<body class="bg-black font-body text-white">
+<div class="relative flex min-h-screen flex-col justify-between bg-gradient-to-br from-gray-900 via-black to-gray-800">
+    <main class="relative z-10 flex flex-grow flex-col items-center justify-center p-6 text-center">
+        <div class="flex flex-col items-center justify-center space-y-8">
+            <!-- Logo at the top -->
+            <div class="mb-1 flex justify-center">
+                <img src="../../logo_with_border.gif" alt="Google Maps Narrator Logo" class="h-72 w-72 object-contain filter drop-shadow-2xl">
+            </div>
+            
+            <!-- Audio Play Button -->
+            <div class="mb-6 flex justify-center">
+                <button id="playButton" class="group flex items-center space-x-3 rounded-full bg-primary/20 px-6 py-3 text-lg font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:bg-primary/30 hover:scale-105 border-2 border-primary/50">
+                    <svg id="playIcon" class="h-6 w-6 transition-transform duration-200" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M8 5v14l11-7z"/>
+                    </svg>
+                    <svg id="pauseIcon" class="h-6 w-6 hidden transition-transform duration-200" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>
+                    </svg>
+                    <span id="playText">Play Demo Audio</span>
+                </button>
+            </div>
+            
+            <h1 class="text-5xl font-bold leading-tight tracking-tight font-title">
+                <span class="text-text-primary">Your Personal</span> <br/> 
+                <span class="text-text-secondary">Road Trip</span> 
+                <span class="text-text-accent">Narrator</span>
+            </h1>
+            <p class="max-w-md text-lg text-gray-200">
+                Transform your road trips into educational adventures with intelligent narration about every place you pass.
+            </p>
+        </div>
+    </main>
+    <footer class="relative z-10 p-6">
+        <div class="space-y-4">
+            <button class="w-full rounded-full bg-primary py-4 px-6 text-lg font-bold text-white shadow-md shadow-primary/40 transition-transform hover:scale-105 border-2 border-primary">
+                <span class="relative z-10">Import Your Trip</span>
+            </button>
+            <button class="w-full rounded-full bg-secondary/20 py-4 px-6 text-lg font-bold text-white backdrop-blur-sm transition-transform hover:scale-105 border-2 border-secondary">
+                <span class="relative z-10">Get Started</span>
+            </button>
+        </div>
+    </footer>
+</div>
+
+<!-- Audio Element -->
+<audio id="demoAudio" preload="auto">
+    <source src="landing_script.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+</audio>
+
+<!-- JavaScript for Audio Controls -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const playButton = document.getElementById('playButton');
+    const playIcon = document.getElementById('playIcon');
+    const pauseIcon = document.getElementById('pauseIcon');
+    const playText = document.getElementById('playText');
+    const demoAudio = document.getElementById('demoAudio');
+    
+    let isPlaying = false;
+    
+    playButton.addEventListener('click', function() {
+        if (isPlaying) {
+            // Pause audio
+            demoAudio.pause();
+            playIcon.classList.remove('hidden');
+            pauseIcon.classList.add('hidden');
+            playText.textContent = 'Play Demo Audio';
+            isPlaying = false;
+        } else {
+            // Play audio
+            demoAudio.play().then(() => {
+                playIcon.classList.add('hidden');
+                pauseIcon.classList.remove('hidden');
+                playText.textContent = 'Pause Demo Audio';
+                isPlaying = true;
+            }).catch(error => {
+                console.error('Error playing audio:', error);
+                alert('Unable to play audio. Please check if the audio file exists.');
+            });
+        }
+    });
+    
+    // Reset button when audio ends
+    demoAudio.addEventListener('ended', function() {
+        playIcon.classList.remove('hidden');
+        pauseIcon.classList.add('hidden');
+        playText.textContent = 'Play Demo Audio';
+        isPlaying = false;
+    });
+    
+    // Handle audio loading errors
+    demoAudio.addEventListener('error', function() {
+        console.error('Audio loading error');
+        playText.textContent = 'Audio Not Available';
+        playButton.disabled = true;
+        playButton.classList.add('opacity-50', 'cursor-not-allowed');
+    });
+});
+</script>
+
+</body>
+</html>

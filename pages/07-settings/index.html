@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - Google Maps Copilot Narrator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #000;
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .app-container {
+            max-width: 375px;
+            margin: 0 auto;
+            background: #1a1a1a;
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        .status-bar {
+            background: #000;
+            padding: 8px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+            color: white;
+        }
+
+        .settings-header {
+            padding: 20px;
+            background: linear-gradient(135deg, #007AFF 0%, #0056CC 100%);
+            text-align: center;
+        }
+
+        .header-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .header-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .settings-section {
+            padding: 20px;
+            background: #1a1a1a;
+            border-bottom: 1px solid #3a3a3a;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #007AFF;
+        }
+
+        .setting-item {
+            background: #2a2a2a;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .setting-left {
+            flex: 1;
+        }
+
+        .setting-name {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .setting-description {
+            font-size: 12px;
+            opacity: 0.7;
+        }
+
+        .setting-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toggle {
+            width: 44px;
+            height: 24px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 12px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .toggle.active {
+            background: #007AFF;
+        }
+
+        .toggle-handle {
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .toggle.active .toggle-handle {
+            left: 22px;
+        }
+
+        .select {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            padding: 8px 12px;
+            color: white;
+            font-size: 12px;
+            min-width: 80px;
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .slider {
+            width: 80px;
+            height: 4px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 2px;
+            cursor: pointer;
+        }
+
+        .slider-fill {
+            height: 100%;
+            background: #007AFF;
+            border-radius: 2px;
+            width: 70%;
+        }
+
+        .slider-value {
+            font-size: 10px;
+            color: #007AFF;
+            min-width: 30px;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        .category-item {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 11px;
+        }
+
+        .category-item.active {
+            background: rgba(0,122,255,0.2);
+            border-color: #007AFF;
+            color: #007AFF;
+        }
+
+        .category-icon {
+            font-size: 16px;
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        .danger-zone {
+            background: #2a2a2a;
+            padding: 20px;
+            border-top: 2px solid #ff3b30;
+        }
+
+        .danger-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #ff3b30;
+            margin-bottom: 15px;
+        }
+
+        .danger-button {
+            width: 100%;
+            padding: 12px;
+            background: #ff3b30;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .bottom-nav {
+            padding: 15px 20px;
+            background: #2a2a2a;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .nav-item {
+            text-align: center;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .nav-icon {
+            font-size: 20px;
+            margin-bottom: 2px;
+            display: block;
+        }
+
+        .nav-label {
+            font-size: 10px;
+            opacity: 0.7;
+        }
+
+        .nav-item.active .nav-icon {
+            color: #007AFF;
+        }
+
+        .nav-item.active .nav-label {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="status-bar">
+            9:43 AM • Settings • iPhone
+        </div>
+
+        <div class="settings-header">
+            <div class="header-icon">⚙️</div>
+            <div class="header-title">Settings</div>
+            <div class="header-subtitle">Customize your narration experience</div>
+        </div>
+
+        <div class="settings-section">
+            <div class="section-title">🎙️ Voice & Audio</div>
+
+            <div class="setting-item">
+                <div class="setting-left">
+                    <div class="setting-name">Voice Selection</div>
+                    <div class="setting-description">Choose your narrator voice</div>
+                </div>
+                <div class="setting-control">
+                    <select class="select">
+                        <option>Sarah (Female)</option>
+                        <option>selected">Michael (Male)</option>
+                        <option>Emily (Female)</option>
+                        <option>David (Male)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-left">
+                    <div class="setting-name">Narration Speed</div>
+                    <div class="setting-description">Adjust speaking pace</div>
+                </div>
+                <div class="setting-control">
+                    <div class="slider-container">
+                        <div class="slider">
+                            <div class="slider-fill"></div>
+                        </div>
+                        <div class="slider-value">1.0x</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-left">
+                    <div class="setting-name">Auto-Play Narration</div>
+                    <div class="setting-description">Start narration automatically</div>
+                </div>
+                <div class="setting-control">
+                    <div class="toggle active">
+                        <div class="toggle-handle"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-left">
+                    <div class="setting-name">Background Audio</div>
+                    <div class="setting-description">Play over music/podcasts</div>
+                </div>
+                <div class="setting-control">
+                    <div class="toggle">
+                        <div class="toggle-handle"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="settings-section">
+            <div class="section-title">🎯 Content Preferences</div>
+
+            <div class="setting-item">
+                <div class="setting-left">
+                    <div class="setting-name">Interest Categories</div>
+                    <div class="setting-description">Choose what interests you</div>
+                </div>
+                <div class="setting-control">
+                    <div class="category-icon">→</div>
+                </div>
+            </div>
+
+            <div class="category-grid" style="margin-top: 10px;">
+                <div class="category-item active">
+                    <span class="category-icon">🏛️</span>
+                    Historical
+                </div>
+                <div class="category-item active">
+                    <span class="category-icon">🏞️</span>
+                    Scenic
+                </div>
+                <div class="category-item">
+                    <span class="category-icon">🍽️</span>
+                    Food & Drink
+                </div>
+                <div class="category-item active">
+                    <span class="category-icon">🏭</span>
+                    Industrial
+                </div>
+                <div class="category-item">
+                    <span class="category-icon">🎭</span>
+                    Arts & Culture
+                </div>
+                <div class="category-item active">
+                    <span class="category-icon">🏰</span>
+                    Architecture
+                </div>
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-left">
+                    <div class="setting-name">Detour Tolerance</div>
+                    <div class="setting-description">Max time for suggested stops</div>
+                </div>
+                <div class="setting-control">
+                    <select class="select">
+                        <option>selected">15 minutes</option>
+                        <option>30 minutes</option>
+                        <option>1 hour</option>
+                        <option>Unlimited</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-left">
+                    <div class="setting-name">Drive-by Narration</div>
+                    <div class="setting-description">Narrate places you pass</div>
+                </div>
+                <div class="setting-control">
+                    <div class="toggle active">
+                        <div class="toggle-handle"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="settings-section">
+            <div class="section-title">📍 Location & Privacy</div>
+
+            <div class="setting-item">
+                <div class="setting-left">
+                    <div class="setting-name">Background Location</div>
+                    <div class="setting-description">Track location during trips</div>
+                </div>
+                <div class="setting-control">
+                    <div class="toggle active">
+                        <div class="toggle-handle"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-left">
+                    <div class="setting-name">Precise Location</div>
+                    <div class="setting-description">Use GPS for accuracy</div>
+                </div>
+                <div class="setting-control">
+                    <div class="toggle active">
+                        <div class="toggle-handle"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="danger-zone">
+            <div class="danger-title">⚠️ Danger Zone</div>
+            <button class="danger-button">
+                Reset All Settings
+            </button>
+        </div>
+
+        <div class="bottom-nav">
+            <div class="nav-item">
+                <span class="nav-icon">🏠</span>
+                <div class="nav-label">Home</div>
+            </div>
+            <div class="nav-item">
+                <span class="nav-icon">🗺️</span>
+                <div class="nav-label">Trips</div>
+            </div>
+            <div class="nav-item active">
+                <span class="nav-icon">⚙️</span>
+                <div class="nav-label">Settings</div>
+            </div>
+            <div class="nav-item">
+                <span class="nav-icon">👤</span>
+                <div class="nav-label">Profile</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
