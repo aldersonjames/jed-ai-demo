@@ -191,6 +191,7 @@
             justify-content: center;
             transition: all 0.2s ease;
             backdrop-filter: blur(10px);
+            box-shadow: 0 2px 8px rgba(255,255,255,0.1);
         }
 
         .control-btn:active {
@@ -199,13 +200,14 @@
 
         .control-btn.primary {
             background: #ff6b35;
+            box-shadow: 0 4px 12px rgba(255,107,53,0.4);
         }
 
         .speed-slider {
             width: 100px;
-            height: 4px;
+            height: 6px;
             background: rgba(255,255,255,0.2);
-            border-radius: 2px;
+            border-radius: 3px;
             cursor: pointer;
             position: relative;
         }
@@ -214,7 +216,7 @@
             height: 100%;
             background: #ff6b35;
             width: 60%;
-            border-radius: 2px;
+            border-radius: 3px;
         }
 
         .speed-label {
@@ -238,12 +240,13 @@
 
         .narration-item {
             background: #2a2a2a;
-            border-radius: 12px;
+            border-radius: 16px;
             padding: 12px 15px;
             margin-bottom: 8px;
             border-left: 3px solid rgba(255,107,53,0.3);
             font-size: 12px;
             opacity: 0.8;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
         .item-time {
@@ -263,7 +266,7 @@
         .bottom-btn {
             padding: 15px;
             border: none;
-            border-radius: 12px;
+            border-radius: 16px;
             font-weight: 600;
             cursor: pointer;
             display: flex;
@@ -271,11 +274,13 @@
             justify-content: center;
             gap: 8px;
             transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
         .btn-primary {
             background: #ff6b35;
             color: white;
+            box-shadow: 0 4px 12px rgba(255,107,53,0.3);
         }
 
         .btn-secondary {

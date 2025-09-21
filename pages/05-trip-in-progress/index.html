@@ -125,7 +125,7 @@
         .control-btn {
             width: 40px;
             height: 40px;
-            border-radius: 50%;
+            border-radius: 20px;
             border: none;
             background: #007AFF;
             color: white;
@@ -135,6 +135,7 @@
             align-items: center;
             justify-content: center;
             transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0,122,255,0.3);
         }
 
         .control-btn:active {
@@ -146,13 +147,15 @@
             height: 50px;
             background: #ff6b35;
             font-size: 20px;
+            border-radius: 25px;
+            box-shadow: 0 4px 12px rgba(255,107,53,0.4);
         }
 
         .volume-slider {
             width: 80px;
-            height: 4px;
+            height: 6px;
             background: rgba(255,255,255,0.2);
-            border-radius: 2px;
+            border-radius: 3px;
             cursor: pointer;
         }
 
@@ -160,12 +163,14 @@
             height: 100%;
             background: #007AFF;
             width: 70%;
-            border-radius: 2px;
+            border-radius: 3px;
         }
 
         .mute-btn {
             background: rgba(255,255,255,0.1);
             font-size: 14px;
+            border-radius: 20px;
+            box-shadow: 0 2px 8px rgba(255,255,255,0.1);
         }
 
         .upcoming-section {
@@ -182,10 +187,11 @@
 
         .upcoming-item {
             background: #2a2a2a;
-            border-radius: 12px;
+            border-radius: 16px;
             padding: 15px;
             margin-bottom: 10px;
             border-left: 4px solid #007AFF;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
         }
 
         .item-header {
@@ -216,17 +222,18 @@
             font-size: 10px;
             background: rgba(0,122,255,0.2);
             color: #007AFF;
-            padding: 2px 6px;
-            border-radius: 4px;
+            padding: 4px 8px;
+            border-radius: 8px;
             margin-top: 5px;
             display: inline-block;
         }
 
         .next-narration {
             background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
-            border-radius: 12px;
+            border-radius: 16px;
             padding: 15px;
             margin-top: 10px;
+            box-shadow: 0 4px 12px rgba(255,107,53,0.3);
         }
 
         .next-title {
@@ -251,11 +258,12 @@
         .quick-action {
             background: rgba(255,255,255,0.05);
             border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 12px;
+            border-radius: 16px;
             padding: 15px 10px;
             text-align: center;
             cursor: pointer;
             transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
         .quick-action:hover {
@@ -292,6 +300,7 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
+            box-shadow: 0 4px 12px rgba(255,59,48,0.4);
         }
     </style>
 </head>
